@@ -1,11 +1,11 @@
-package authentication_test
+package authorization_test
 
 import (
 	"errors"
 	"strings"
 	"testing"
 
-	"github.com/ksrof/go-github-api/authentication"
+	"github.com/ksrof/go-github-api/authorization"
 )
 
 // fixtures
@@ -14,23 +14,23 @@ const mockToken string = "ghp_a2gcJYu1lxkgVDduggjh6x1plhbJcQxDz9W0"
 func TestBasic(t *testing.T) {
 	tests := []struct {
 		name    string
-		opts    []authentication.Option
+		opts    []authorization.Option
 		want    string
 		wantErr error
 	}{
 		{
 			name: "test with valid token",
-			opts: []authentication.Option{
-				authentication.WithToken(mockToken),
+			opts: []authorization.Option{
+				authorization.WithToken(mockToken),
 			},
 			want: mockToken,
 		},
 		{
 			name: "test with invalid token",
-			opts: []authentication.Option{
-				authentication.WithToken("abc123"),
+			opts: []authorization.Option{
+				authorization.WithToken("abc123"),
 			},
-			wantErr: authentication.ErrInvalidToken,
+			wantErr: authorization.ErrInvalidToken,
 		},
 	}
 
@@ -39,7 +39,7 @@ func TestBasic(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			auth, err := authentication.New(
+			auth, err := authorization.New(
 				tc.opts...,
 			)
 			if err != nil {

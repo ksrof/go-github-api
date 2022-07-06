@@ -1,4 +1,4 @@
-package authentication
+package authorization
 
 import (
 	"context"
@@ -16,9 +16,9 @@ var (
 	ErrInvalidToken       error = errors.New("invalid <token>")
 )
 
-// Authentication is the interface that wraps the Github API
-// authentication methods.
-type Authentication interface {
+// Authorization is the interface that wraps the Github API
+// authorization methods.
+type Authorization interface {
 	// Basic returns the Github OAuth token to be used in
 	// the Authorization request header.
 	//
@@ -42,9 +42,9 @@ type Authentication interface {
 	Device(ctx context.Context) (string, error)
 }
 
-type Option func(a *authentication) error
+type Option func(a *authorization) error
 
-type authentication struct {
+type authorization struct {
 	client_id    string
 	redirect_uri string
 	login        string
@@ -54,8 +54,8 @@ type authentication struct {
 	token        string
 }
 
-func New(opts ...Option) (Authentication, error) {
-	a := &authentication{}
+func New(opts ...Option) (Authorization, error) {
+	a := &authorization{}
 
 	for _, opt := range opts {
 		err := opt(a)
@@ -68,49 +68,49 @@ func New(opts ...Option) (Authentication, error) {
 }
 
 func WithClientID(client_id string) Option {
-	return func(a *authentication) error {
+	return func(a *authorization) error {
 		a.client_id = client_id
 		return nil
 	}
 }
 
 func WithRedirectURI(redirect_uri string) Option {
-	return func(a *authentication) error {
+	return func(a *authorization) error {
 		a.redirect_uri = redirect_uri
 		return nil
 	}
 }
 
 func WithLogin(login string) Option {
-	return func(a *authentication) error {
+	return func(a *authorization) error {
 		a.login = login
 		return nil
 	}
 }
 
 func WithScope(scope string) Option {
-	return func(a *authentication) error {
+	return func(a *authorization) error {
 		a.scope = scope
 		return nil
 	}
 }
 
 func WithState(state string) Option {
-	return func(a *authentication) error {
+	return func(a *authorization) error {
 		a.state = state
 		return nil
 	}
 }
 
 func WithAllowSignup(allow_signup string) Option {
-	return func(a *authentication) error {
+	return func(a *authorization) error {
 		a.allow_signup = allow_signup
 		return nil
 	}
 }
 
 func WithToken(token string) Option {
-	return func(a *authentication) error {
+	return func(a *authorization) error {
 		err := validateToken(token)
 		if err != nil {
 			return err
@@ -121,15 +121,15 @@ func WithToken(token string) Option {
 	}
 }
 
-func (a *authentication) Basic() string {
+func (a *authorization) Basic() string {
 	return a.token
 }
 
-func (a *authentication) WebApplication(ctx context.Context) (string, error) {
+func (a *authorization) WebApplication(ctx context.Context) (string, error) {
 	return a.token, nil
 }
 
-func (a *authentication) Device(ctx context.Context) (string, error) {
+func (a *authorization) Device(ctx context.Context) (string, error) {
 	return a.token, nil
 }
 

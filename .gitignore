@@ -1,3 +1,9 @@
+# VSCode stuff
+*.vscode
+
+# Sensitive data
+*.env
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
